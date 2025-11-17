@@ -1,9 +1,9 @@
 ﻿import { z } from "zod";
 
 export const createPostSchema = z.object({
-  content: z.string().min(1, "Content is required"),
+  content: z.string().min(1, { message: "Content is required" }),
   image: z.string().optional(),
-  authorId: z.string().min(1, "Author ID is required")
+  authorId: z.string().min(1, { message: "Author ID is required" })
 });
 
 export const updatePostSchema = z.object({

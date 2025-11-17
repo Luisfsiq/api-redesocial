@@ -46,31 +46,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST /api/posts - Criar novo post
-router.post("/", validate(createPostSchema), async (req, res) => {
-  try {
-    console.log("📝 Criando post:", req.body);
-    const post = await prisma.post.create({
-      data: req.body,
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar: true
-          }
-        }
-      }
-    });
-    console.log("✅ Post criado:", post.id);
-    res.status(201).json(post);
-  } catch (error) {
-    console.error("❌ Erro ao criar post:", error);
-    res.status(500).json({ error: "Failed to create post" });
-  }
-});
-
 // GET /api/posts/:id - Buscar post por ID
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
@@ -110,6 +85,32 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     console.error("❌ Erro ao buscar post:", error);
     res.status(500).json({ error: "Failed to fetch post" });
+  }
+});
+
+// POST /api/posts - Criar novo post
+router.post("/", validate(createPostSchema), async (req, res) => {
+  try {
+    console.log("📝 Criando post:", req.body);
+    const post = await prisma.post.create({
+      data: req.body,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true
+          }
+        },
+        comments: true
+      }
+    });
+    console.log("✅ Post criado:", post.id);
+    res.status(201).json(post);
+  } catch (error) {
+    console.error("❌ Erro ao criar post:", error);
+    res.status(500).json({ error: "Failed to create post" });
   }
 });
 
@@ -159,10 +160,15 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// PATCH /api/posts/:id/like - Curtir/descurtir post
+// PATCH /api/posts/:id/like - Curtir/descurtir post (CORRIGIDA)
 router.patch("/:id/like", async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
+
+  // VALIDAÇÃO ADICIONADA
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
 
   try {
     const existingLike = await prisma.like.findUnique({
@@ -183,6 +189,7 @@ router.patch("/:id/like", async (req, res) => {
           }
         }
       });
+      console.log(`👎 Like removido - User: ${userId}, Post: ${id}`);
     } else {
       await prisma.like.create({
         data: {
@@ -190,6 +197,7 @@ router.patch("/:id/like", async (req, res) => {
           postId: id
         }
       });
+      console.log(`👍 Like adicionado - User: ${userId}, Post: ${id}`);
     }
 
     const post = await prisma.post.findUnique({
