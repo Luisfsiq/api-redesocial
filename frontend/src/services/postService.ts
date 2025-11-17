@@ -12,7 +12,12 @@ export const postService = {
     if (!userData) throw new Error("User not logged in");
     const user = JSON.parse(userData);
     if (!user?.id) throw new Error("User ID not found");
-    const response = await api.post("/posts", { content, image, authorId: user.id });
+    
+    const response = await api.post("/posts", { 
+      content, 
+      image, 
+      authorId: user.id 
+    });
     return response.data;
   },
 
@@ -20,7 +25,10 @@ export const postService = {
     const userData = localStorage.getItem("user");
     if (!userData) throw new Error("User not logged in");
     const user = JSON.parse(userData);
-    const response = await api.patch(`/posts/${postId}/like`, { userId: user.id });
+    
+    const response = await api.patch(`/posts/${postId}/like`, { 
+      userId: user.id 
+    });
     return response.data;
   },
 
@@ -36,10 +44,10 @@ export const postService = {
     const response = await api.post("/comments", { 
       content, 
       authorId: user.id,
-      postId  // ✅ postId no BODY
+      postId
     });
     
-    console.log("✅ Comentário criado com sucesso");
+    console.log("✅ Comentário enviado com sucesso");
     return response.data;
   },
 
