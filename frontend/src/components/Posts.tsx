@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -12,9 +12,9 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { FavoriteBorder, Comment } from "@mui/icons-material";
-import { postService } from "../../services/postService";
-import { useAuth } from "../../contexts/AuthContext";
-import { Post } from "../../types/User";
+import { postService } from "../services/postService";
+import { useAuth } from "../contexts/AuthContext";
+import { Post } from "../types/User";
 
 const Posts: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);

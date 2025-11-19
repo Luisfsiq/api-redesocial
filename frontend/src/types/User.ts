@@ -1,4 +1,4 @@
-﻿export interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -13,7 +13,7 @@ export interface Post {
   content: string;
   image?: string;
   author: User;
-  likes: string[];
+  likes: Like[];
   comments: Comment[];
   createdAt: string;
   updatedAt: string;
@@ -26,4 +26,11 @@ export interface Comment {
   postId: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Like {
+  id: string;
+  userId: string;
+  postId: string;
+  createdAt: string;
 }
