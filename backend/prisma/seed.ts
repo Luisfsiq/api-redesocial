@@ -1,4 +1,4 @@
-﻿import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -21,19 +21,19 @@ async function main() {
   console.log(`✅ Usuário criado: ${user.name}`)
 
   // Criar posts de exemplo
-  const post1 = await prisma.post.create({
-    data: {
-      content: 'Este é meu primeiro post! Bem-vindo à rede social.',
-      authorId: user.id,
-    },
-  })
+  const ensurePost = async (content: string, authorId: string) => {
+    const existing = await prisma.post.findFirst({ where: { content, authorId } })
+    if (existing) return existing
+    return prisma.post.create({
+      data: {
+        content,
+        authorId,
+      },
+    })
+  }
 
-  const post2 = await prisma.post.create({
-    data: {
-      content: 'Compartilhando mais uma ideia interessante...',
-      authorId: user.id,
-    },
-  })
+  const post1 = await ensurePost('Este é meu primeiro post! Bem-vindo à rede social.', user.id)
+  const post2 = await ensurePost('Compartilhando mais uma ideia interessante...', user.id)
 
   console.log(`✅ Posts de exemplo criados: ${post1.id}, ${post2.id}`)
   console.log('🎉 Seed concluído com sucesso!')
