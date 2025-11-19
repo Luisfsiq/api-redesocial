@@ -4,7 +4,9 @@
     "scripts": {
         "dev": "npx tsx src/index.ts",
         "build": "tsc",
-        "start": "node dist/index.js"
+        "prestart": "npx prisma migrate deploy",
+        "start": "node dist/index.js",
+        "postinstall": "prisma generate"
     },
     "dependencies": {
         "@prisma/client": "^5.6.0",
