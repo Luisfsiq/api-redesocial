@@ -1,0 +1,40 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Env files
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# Build outputs
+dist/
+frontend/dist/
+backend/dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Runtime cache & coverage
+.tmp/
+temp/
+coverage/
+
+# Vite
+.vite/
+
+# Prisma local dev database
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# Docker (local overrides)
+docker-compose.override.yml
+
+# OS artifacts
+.DS_Store
+Thumbs.db

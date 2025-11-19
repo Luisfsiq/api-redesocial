@@ -1,0 +1,29 @@
+databases:
+  - name: redesocial-db
+    databaseName: redesocial
+    plan: free
+
+services:
+  - type: web
+    name: redesocial-api
+    env: node
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && node dist/index.js
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: redesocial-db
+          property: connectionString
+      - key: PORT
+        value: 3000
+
+staticSites:
+  - name: redesocial-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://REPLACE_WITH_BACKEND_URL/api

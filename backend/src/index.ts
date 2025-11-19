@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
@@ -28,7 +29,7 @@ app.post("/api/auth/login", async (req, res) => {
     });
 
     if (!user || user.password !== password) {
-      return res.status(401).json({ message: "Credenciais inválidas" });
+      return res.status(401).json({ message: "Credenciais invï¿½lidas" });
     }
 
     const { password: _, ...userWithoutPassword } = user;
@@ -52,7 +53,7 @@ app.post("/api/auth/register", async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(400).json({ message: "Usuário já existe" });
+      return res.status(400).json({ message: "Usuï¿½rio jï¿½ existe" });
     }
 
     const user = await prisma.user.create({
@@ -72,7 +73,7 @@ app.post("/api/auth/register", async (req, res) => {
     });
   } catch (error) {
     console.error("Register error:", error);
-    res.status(500).json({ message: "Erro ao criar usuário" });
+    res.status(500).json({ message: "Erro ao criar usuï¿½rio" });
   }
 });
 

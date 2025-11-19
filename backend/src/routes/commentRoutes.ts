@@ -1,4 +1,4 @@
-﻿import express from "express";
+import express from "express";
 import { PrismaClient } from "@prisma/client";
 
 const router = express.Router();
@@ -45,8 +45,9 @@ router.post("/", async (req, res) => {
 
   } catch (error) {
     console.error("❌ Erro ao criar comentário:", error);
+    const message = error instanceof Error ? error.message : String(error);
     res.status(500).json({ 
-      error: "Failed to create comment: " + error.message,
+      error: "Failed to create comment: " + message,
       details: error 
     });
   }

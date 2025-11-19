@@ -1,5 +1,5 @@
-﻿import express from "express";
-import { PrismaClient } from "@prisma/client";
+import express from "express";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { validate } from "../middleware/validate";
 import { createPostSchema, updatePostSchema } from "../schemas/postSchema";
 
@@ -136,7 +136,7 @@ router.put("/:id", validate(updatePostSchema), async (req, res) => {
     res.json(post);
   } catch (error) {
     console.error("❌ Erro ao atualizar post:", error);
-    if (error.code === "P2025") {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
       return res.status(404).json({ error: "Post not found" });
     }
     res.status(500).json({ error: "Failed to update post" });
@@ -153,7 +153,7 @@ router.delete("/:id", async (req, res) => {
     res.json({ message: "Post deleted successfully" });
   } catch (error) {
     console.error("❌ Erro ao deletar post:", error);
-    if (error.code === "P2025") {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
       return res.status(404).json({ error: "Post not found" });
     }
     res.status(500).json({ error: "Failed to delete post" });

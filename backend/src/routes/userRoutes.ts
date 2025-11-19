@@ -1,4 +1,5 @@
 import express from 'express';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../index';
 import { validate } from '../middleware/validate';
 import { createUserSchema, updateUserSchema } from '../schemas/userSchema';
@@ -69,7 +70,7 @@ router.post('/', validate(createUserSchema), async (req, res) => {
     res.status(201).json(user);
   } catch (error) {
     console.error('Error creating user:', error);
-    if (error.code === 'P2002') {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return res.status(400).json({ error: 'Email already exists' });
     }
     res.status(500).json({ error: 'Failed to create user' });
@@ -95,7 +96,7 @@ router.put('/:id', validate(updateUserSchema), async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error('Error updating user:', error);
-    if (error.code === 'P2025') {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return res.status(404).json({ error: 'User not found' });
     }
     res.status(500).json({ error: 'Failed to update user' });
@@ -111,7 +112,7 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
-    if (error.code === 'P2025') {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return res.status(404).json({ error: 'User not found' });
     }
     res.status(500).json({ error: 'Failed to delete user' });
