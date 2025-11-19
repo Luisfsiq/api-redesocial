@@ -1,13 +1,13 @@
 {
     "name": "api-rede-social",
     "version": "1.0.0",
-    "scripts": {
-        "dev": "npx tsx src/index.ts",
-        "build": "tsc",
-        "prestart": "npx prisma migrate deploy",
-        "start": "node dist/index.js",
-        "postinstall": "prisma generate"
-    },
+  "scripts": {
+      "dev": "npx tsx src/index.ts",
+      "build": "tsc",
+      "start": "node dist/index.js",
+      "postinstall": "prisma generate",
+      "seed": "npx prisma db seed"
+  },
     "dependencies": {
         "@prisma/client": "^5.6.0",
         "cors": "^2.8.5",

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404</title>
+    <!-- Fallback simples para SPA: se a CDN retornar 404 em uma rota interna,
+         redireciona para a raiz onde a SPA é carregada. A regra ideal é um
+         rewrite /* -> /index.html configurado na Render. -->
+  </head>
+  <body>
+    <noscript>Esta aplicação requer JavaScript habilitado.</noscript>
+    <script>
+      // Redireciona para a raiz da aplicação
+      window.location.replace('/');
+    </script>
+  </body>
+  </html>

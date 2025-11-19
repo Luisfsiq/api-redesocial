@@ -191,6 +191,45 @@ Health Check: http://localhost:3000/api/health
 
 Se preferir SQLite para testes rápidos, altere o `datasource` em `schema.prisma` para `sqlite` e use `db push`. Por padrão, o projeto está configurado para PostgreSQL.
 
+---
+
+## 🚀 Deploy na Render
+
+### 1) Banco de Dados
+- Crie um serviço PostgreSQL (Render Postgres ou outro provedor) e copie a `DATABASE_URL`.
+- Use o formato com SSL quando aplicável: `postgresql://user:pass@host:5432/db?sslmode=require`.
+
+### 2) Backend (Web Service)
+- Service Type: `Web Service`
+- Root Directory: `backend`
+- Build Command: `npm install && npm run build`
+- Start Command: `npm start`
+- Health Check Path: `/api/health`
+- Environment:
+  - `NODE_VERSION=20`
+  - `DATABASE_URL` (do passo 1)
+- O `prestart` já executa `npx prisma migrate deploy`. Para popular dados, rode uma vez o script de seed: `npm run seed`.
+
+### 3) Frontend (Static Site)
+- Service Type: `Static Site`
+- Root Directory: `frontend`
+- Build Command: `npm install && npm run build`
+- Publish Directory: `dist`
+- Environment:
+  - `VITE_API_URL=https://<SEU_BACKEND>.onrender.com/api` (inclua `/api`)
+  - Opcional: `NODE_VERSION=20`
+- SPA Rewrites: em "Redirects and Rewrites", adicione `/*` → `/index.html` com ação `Rewrite`.
+  - Como fallback, um `frontend/public/404.html` foi adicionado para evitar página em branco (ideal é usar o rewrite acima).
+
+### 4) Verificações pós-deploy
+- Backend: `GET /api/health` deve retornar 200; logs devem mostrar migrações aplicadas.
+- Frontend: a página deve carregar e, ao dar F5 em rotas internas, continuar funcionando (devido ao rewrite).
+- Login/Registro funcionam quando:
+  - `VITE_API_URL` aponta para `.../api` corretamente.
+  - `DATABASE_URL` está válido e acessível.
+
+---
+
 📁 Estrutura do Projeto
 ```bash
 api-fullstack-redesocial/
