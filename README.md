@@ -18,7 +18,8 @@
 - [Tecnologias](#-tecnologias)
 - [Pré-requisitos](#-pré-requisitos)
 - [Instalação](#-instalação)
-- [Executando a Aplicação](#-executando-a-aplicação)
+- [Banco de Dados](#-banco-de-dados)
+- [Deploy no Render](#-deploy-no-render)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [API Endpoints](#-api-endpoints)
 - [Scripts](#-scripts)
@@ -35,7 +36,7 @@ Conta com:
 - Interface moderna usando **Material-UI**
 - API RESTful com **Express + TypeScript**
 - Banco de dados **PostgreSQL + Prisma ORM**
-- Roteamento protegido; autenticação simples com token de exemplo (sem JWT)
+- Roteamento protegido e autenticação
 
 ---
 
@@ -43,7 +44,7 @@ Conta com:
 
 ### 🔐 Autenticação
 - Cadastro com validação
-- Login com token de exemplo (sem JWT)
+- Login
 - Logout
 - Proteção de rotas no frontend
 
@@ -142,45 +143,6 @@ npx prisma db seed
 cd ../frontend
 npm install
 ```
-💻 Executando a Aplicação
-📌 Desenvolvimento
-
-Backend (porta 3000)
-```bash
-cd backend
-npm run dev
-```
-
-Frontend (porta 5173)
-```bash
-cd frontend
-npm run dev
-```
-📌 Produção
-
-Backend
-```bash
-cd backend
-npm run build
-npm start
-```
-
-Frontend
-```bash
-cd frontend
-npm run build
-npm run preview
-```
-🔗 Acesso
-
-Frontend: http://localhost:5173
-
-Frontend (produção): https://redesocial-frontend.onrender.com/login
-
-Backend: http://localhost:3000
-
-Health Check: http://localhost:3000/api/health
-
 ---
 
 ## 🗄️ Banco de Dados
@@ -221,13 +183,6 @@ Migrações são aplicadas pelo `startCommand` acima; o seed roda uma vez no sta
   - Opcional: `NODE_VERSION=20`
 - SPA Rewrites: em "Redirects and Rewrites", adicione `/*` → `/index.html` com ação `Rewrite`.
   - Como fallback, um `frontend/public/404.html` foi adicionado para evitar página em branco (ideal é usar o rewrite acima).
-
-### 4) Verificações pós-deploy
-- Backend: `GET /api/health` deve retornar 200; logs devem mostrar migrações aplicadas.
-- Frontend: a página deve carregar e, ao dar F5 em rotas internas, continuar funcionando (devido ao rewrite).
-- Login/Registro funcionam quando:
-  - `VITE_API_URL` aponta para `.../api` corretamente.
-  - `DATABASE_URL` está válido e acessível.
 
 ---
 
@@ -284,7 +239,6 @@ GET /api/users/:id
 
 PUT /api/users/:id
 
- (não há endpoint `/api/users/profile` na API atual)
 
 📝 Posts
 
