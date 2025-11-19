@@ -34,7 +34,7 @@ Conta com:
 
 - Interface moderna usando **Material-UI**
 - API RESTful robusta com **Express + TypeScript**
-- Banco de dados **SQLite + Prisma ORM**
+- Banco de dados **PostgreSQL + Prisma ORM**
 - Roteamento protegido e autenticação JWT
 
 ---
@@ -81,7 +81,7 @@ Conta com:
 - Express  
 - TypeScript  
 - Prisma ORM  
-- SQLite  
+- PostgreSQL  
 - Zod  
 - CORS  
 
@@ -100,8 +100,8 @@ Conta com:
 
 ### 1. Clonar o repositório
 ```bash
-git clone https://github.com/Luisfsiq/api-fullstack-redesocial.git
-cd api-fullstack-redesocial
+git clone https://github.com/Luisfsiq/api-quarta.git
+cd api-quarta
 ```
 2. Backend
 ```bash
