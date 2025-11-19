@@ -19,9 +19,8 @@ services:
           property: connectionString
       - key: PORT
         value: "3000"
-
-staticSites:
-  - name: redesocial-frontend
+  - type: static_site
+    name: redesocial-frontend
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
