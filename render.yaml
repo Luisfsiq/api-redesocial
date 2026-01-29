@@ -33,4 +33,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: https://api-quarta-1.onrender.com/api
+        value: https://api-redesocial-1.onrender.com/api
