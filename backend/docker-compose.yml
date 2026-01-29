@@ -6,7 +6,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://admin:admin@db:5432/redesocial
+      - DATABASE_URL=postgresql://admin:admin@dpg-d4eu96v5r7bs7380tiig-a:5432/redesocial
       - PORT=3000
     depends_on:
       - db
@@ -15,6 +15,7 @@ services:
   db:
     image: postgres:15
     container_name: db-rede-social
+    hostname: dpg-d4eu96v5r7bs7380tiig-a
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
