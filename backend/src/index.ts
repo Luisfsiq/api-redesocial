@@ -9,11 +9,23 @@ import commentRoutes from "./routes/commentRoutes";
 const app = express();
 export const prisma = new PrismaClient();
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "https://redesocial-frontend.onrender.com",
+    "http://localhost:3001",
+    "http://localhost:3000",
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: false
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
 app.use("/api/comments", commentRoutes);
 
 // Rota raiz para evitar "Cannot GET /"
