@@ -142,16 +142,6 @@ const Register: React.FC = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  name="avatar"
-                  label="URL do Avatar (opcional)"
-                  id="avatar"
-                  value={formData.avatar}
-                  onChange={handleChange}
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
