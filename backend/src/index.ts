@@ -11,13 +11,15 @@ export const prisma = new PrismaClient();
 
 const corsOptions = {
   origin: [
+    "https://api-redesocial.onrender.com",
     "https://redesocial-frontend.onrender.com",
     "http://localhost:3001",
     "http://localhost:3000",
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  credentials: true,
+  optionsSuccessStatus: 204
 };
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
