@@ -9,25 +9,21 @@ import commentRoutes from "./routes/commentRoutes";
 const app = express();
 export const prisma = new PrismaClient();
 
-// 1. MIDDLEWARE CORS MANUAL E LOGS (ULTRA-ROBUSTO)
+// 1. MIDDLEWARE CORS MANUAL E LOGS (ULTRA-PERMISSIVO PARA DEPURAÇÃO)
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   
   // Log detalhado para o Render
   console.log(`[REQ] ${req.method} ${req.url} | Origin: ${origin || 'N/A'}`);
 
-  // Reflete a origem se ela existir (Permite tudo dinamicamente para depuração)
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
+  // Modo mais permissivo possível para diagnosticar bloqueios
+  res.setHeader('Access-Control-Allow-Origin', '*'); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Headers', '*'); // Permite qualquer header
+  res.setHeader('Access-Control-Allow-Credentials', 'false'); // Desabilitado para permitir "*" no Origin
 
   // Trata Preflight OPTIONS imediatamente
   if (req.method === 'OPTIONS') {
-    console.log(`[CORS] Respondendo 200 ao preflight OPTIONS de ${origin}`);
     return res.status(200).end();
   }
 
@@ -36,25 +32,10 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use("/api/users", userRoutes);
-app.use("/api/posts", postRoutes);
-app.use("/api/comments", commentRoutes);
-
-app.get("/api", (req: Request, res: Response) => {
-  res.json({ status: "OK" });
-});
-
-// Rota raiz para evitar "Cannot GET /"
-app.get("/", (req: Request, res: Response) => {
-  res.send("API OK");
-});
-
-app.get("/api/health", (req: Request, res: Response) => {
-  res.json({ status: "OK", message: "API is running" });
-});
-
+// 2. ROTAS DE AUTENTICAÇÃO (MOVIDAS PARA O TOPO)
 app.post("/api/auth/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  console.log(`[AUTH] Tentativa de login para: ${email}`);
   
   try {
     const user = await prisma.user.findUnique({
@@ -79,6 +60,7 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
 
 app.post("/api/auth/register", async (req: Request, res: Response) => {
   const { name, email, password, avatar } = req.body;
+  console.log(`[AUTH] Tentativa de registro para: ${email}`);
 
   try {
     const existingUser = await prisma.user.findUnique({
@@ -100,7 +82,7 @@ app.post("/api/auth/register", async (req: Request, res: Response) => {
 
     const { password: _, ...userWithoutPassword } = user;
     
-    res.json({ 
+    res.status(201).json({ 
       user: userWithoutPassword,
       token: "fake-jwt-token"
     });
@@ -108,6 +90,30 @@ app.post("/api/auth/register", async (req: Request, res: Response) => {
     console.error("Register error:", error);
     res.status(500).json({ message: "Erro ao criar usuário" });
   }
+});
+
+// 3. OUTRAS ROTAS
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
+
+app.get("/api/health", (req: Request, res: Response) => {
+  res.json({ status: "OK", message: "API is running" });
+});
+
+app.get("/api", (req: Request, res: Response) => {
+  res.json({ status: "OK" });
+});
+
+// Rota raiz para evitar "Cannot GET /"
+app.get("/", (req: Request, res: Response) => {
+  res.send("API OK");
+});
+
+// 4. HANDLER DE 404 PARA LOGAR ROTAS NÃO ENCONTRADAS
+app.use((req, res) => {
+  console.warn(`[404] Rota não encontrada: ${req.method} ${req.url}`);
+  res.status(404).json({ error: "Route not found" });
 });
 
 const PORT = process.env.PORT || 3000;
