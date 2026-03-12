@@ -3,6 +3,6 @@ export const API_CONFIG = {
     import.meta.env.VITE_API_URL ||
     (typeof window !== "undefined" &&
     (window.location.hostname.includes("onrender.com"))
-      ? "https://api-redesocial-1.onrender.com/api"
+      ? "https://api-redesocial-prod.onrender.com/api"
       : "http://localhost:3000/api")
 };
