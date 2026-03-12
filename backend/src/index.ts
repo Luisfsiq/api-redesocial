@@ -15,34 +15,16 @@ app.use((req, res, next) => {
   next();
 });
 
-const allowedOrigins = [
-  "https://api-redesocial.onrender.com",
-  "https://redesocial-frontend.onrender.com",
-  "http://localhost:3001",
-  "http://localhost:3000",
-];
-
 const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    // Permitir requisições sem origin (como mobile apps ou curl)
-    if (!origin) return callback(null, true);
-    
-    const isAllowed = allowedOrigins.includes(origin) || origin.endsWith(".onrender.com");
-    
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      console.warn(`[CORS] Origin bloqueado: ${origin}`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: true, // Reflete a origem da requisição na resposta (permite tudo dinamicamente)
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   credentials: true,
-  optionsSuccessStatus: 200 // Algumas versões do navegador preferem 200 em vez de 204
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Garante que preflight OPTIONS use as mesmas regras
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
