@@ -9,22 +9,31 @@ import commentRoutes from "./routes/commentRoutes";
 const app = express();
 export const prisma = new PrismaClient();
 
-// Middleware de Log para depuração no Render
+// 1. MIDDLEWARE CORS MANUAL E LOGS (ULTRA-ROBUSTO)
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+  const origin = req.headers.origin;
+  
+  // Log detalhado para o Render
+  console.log(`[REQ] ${req.method} ${req.url} | Origin: ${origin || 'N/A'}`);
+
+  // Reflete a origem se ela existir (Permite tudo dinamicamente para depuração)
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // Trata Preflight OPTIONS imediatamente
+  if (req.method === 'OPTIONS') {
+    console.log(`[CORS] Respondendo 200 ao preflight OPTIONS de ${origin}`);
+    return res.status(200).end();
+  }
+
   next();
 });
 
-const corsOptions = {
-  origin: true, // Reflete a origem da requisição na resposta (permite tudo dinamicamente)
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
-  credentials: true,
-  optionsSuccessStatus: 200
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Garante que preflight OPTIONS use as mesmas regras
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
