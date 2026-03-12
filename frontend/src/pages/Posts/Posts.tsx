@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -126,8 +126,11 @@ const Posts: React.FC = () => {
             <Card>
               <CardContent>
                 <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
-                  <Avatar sx={{ mr: 2 }}>
-                    {post.author.name.charAt(0).toUpperCase()}
+                  <Avatar 
+                    src={post.author.avatar || undefined}
+                    sx={{ mr: 2, bgcolor: "primary.main" }}
+                  >
+                    {!post.author.avatar && post.author.name.charAt(0).toUpperCase()}
                   </Avatar>
                   <Box>
                     <Typography variant="h6">

@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import {
   AppBar,
   Toolbar,
@@ -26,10 +26,13 @@ const Header: React.FC = () => {
           Rede Social
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Avatar sx={{ width: 32, height: 32 }}>
-            {user?.name?.charAt(0).toUpperCase()}
+          <Avatar 
+            src={user?.avatar || undefined}
+            sx={{ width: 32, height: 32, bgcolor: "secondary.main" }}
+          >
+            {!user?.avatar && user?.name?.charAt(0).toUpperCase()}
           </Avatar>
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ display: { xs: "none", sm: "block" } }}>
             {user?.name}
           </Typography>
           <Button color="inherit" onClick={handleLogout}>

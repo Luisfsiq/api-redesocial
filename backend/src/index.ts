@@ -26,7 +26,10 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
-app.use("/api/comments", commentRoutes);
+
+app.get("/api", (req, res) => {
+  res.json({ status: "OK" });
+});
 
 // Rota raiz para evitar "Cannot GET /"
 app.get("/", (req, res) => {

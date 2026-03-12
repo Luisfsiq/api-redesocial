@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Paper,
@@ -16,6 +16,7 @@ const Profile: React.FC = () => {
   const { user } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [bio, setBio] = useState(user?.bio || "");
+  const [avatar, setAvatar] = useState(user?.avatar || "");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -25,7 +26,7 @@ const Profile: React.FC = () => {
 
     setLoading(true);
     try {
-      await userService.updateUser(user.id, { name, bio });
+      await userService.updateUser(user.id, { name, bio, avatar });
       setMessage("Perfil atualizado com sucesso!");
     } catch (error) {
       setMessage("Erro ao atualizar perfil");
@@ -44,9 +45,10 @@ const Profile: React.FC = () => {
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 3, textAlign: "center" }}>
             <Avatar
-              sx={{ width: 100, height: 100, margin: "0 auto 16px" }}
+              src={avatar || user?.avatar || undefined}
+              sx={{ width: 100, height: 100, margin: "0 auto 16px", bgcolor: "primary.main" }}
             >
-              {user?.name?.charAt(0).toUpperCase()}
+              {!avatar && !user?.avatar && user?.name?.charAt(0).toUpperCase()}
             </Avatar>
             <Typography variant="h6">{user?.name}</Typography>
             <Typography variant="body2" color="textSecondary">
@@ -75,6 +77,14 @@ const Profile: React.FC = () => {
                 onChange={(e) => setName(e.target.value)}
                 margin="normal"
                 required
+              />
+              <TextField
+                fullWidth
+                label="URL do Avatar"
+                value={avatar}
+                onChange={(e) => setAvatar(e.target.value)}
+                margin="normal"
+                placeholder="https://exemplo.com/foto.jpg"
               />
               <TextField
                 fullWidth

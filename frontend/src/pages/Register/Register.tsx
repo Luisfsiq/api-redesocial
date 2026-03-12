@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Container,
@@ -104,7 +104,20 @@ const Register: React.FC = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="avatar"
+                  label="URL do Avatar (opcional)"
+                  name="avatar"
+                  placeholder="https://exemplo.com/foto.jpg"
+                  autoComplete="url"
+                  value={formData.avatar}
+                  onChange={handleChange}
+                  helperText="Insira o link de uma imagem para seu perfil"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
