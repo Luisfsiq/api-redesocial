@@ -9,20 +9,40 @@ import commentRoutes from "./routes/commentRoutes";
 const app = express();
 export const prisma = new PrismaClient();
 
+// Middleware de Log para depuração no Render
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+  next();
+});
+
+const allowedOrigins = [
+  "https://api-redesocial.onrender.com",
+  "https://redesocial-frontend.onrender.com",
+  "http://localhost:3001",
+  "http://localhost:3000",
+];
+
 const corsOptions = {
-  origin: [
-    "https://api-redesocial.onrender.com",
-    "https://redesocial-frontend.onrender.com",
-    "http://localhost:3001",
-    "http://localhost:3000",
-  ],
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Permitir requisições sem origin (como mobile apps ou curl)
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.includes(origin) || origin.endsWith(".onrender.com");
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn(`[CORS] Origin bloqueado: ${origin}`);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   credentials: true,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 200 // Algumas versões do navegador preferem 200 em vez de 204
 };
+
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
