@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import userRoutes from "./routes/userRoutes";
@@ -27,20 +27,20 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 
-app.get("/api", (req, res) => {
+app.get("/api", (req: Request, res: Response) => {
   res.json({ status: "OK" });
 });
 
 // Rota raiz para evitar "Cannot GET /"
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("API OK");
 });
 
-app.get("/api/health", (req, res) => {
+app.get("/api/health", (req: Request, res: Response) => {
   res.json({ status: "OK", message: "API is running" });
 });
 
-app.post("/api/auth/login", async (req, res) => {
+app.post("/api/auth/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
   
   try {
@@ -49,7 +49,7 @@ app.post("/api/auth/login", async (req, res) => {
     });
 
     if (!user || user.password !== password) {
-      return res.status(401).json({ message: "Credenciais inv�lidas" });
+      return res.status(401).json({ message: "Credenciais inválidas" });
     }
 
     const { password: _, ...userWithoutPassword } = user;
@@ -64,7 +64,7 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-app.post("/api/auth/register", async (req, res) => {
+app.post("/api/auth/register", async (req: Request, res: Response) => {
   const { name, email, password, avatar } = req.body;
 
   try {
@@ -73,7 +73,7 @@ app.post("/api/auth/register", async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(400).json({ message: "Usu�rio j� existe" });
+      return res.status(400).json({ message: "Usuário já existe" });
     }
 
     const user = await prisma.user.create({
@@ -93,7 +93,7 @@ app.post("/api/auth/register", async (req, res) => {
     });
   } catch (error) {
     console.error("Register error:", error);
-    res.status(500).json({ message: "Erro ao criar usu�rio" });
+    res.status(500).json({ message: "Erro ao criar usuário" });
   }
 });
 

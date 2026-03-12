@@ -1,11 +1,11 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 // POST /api/comments - Criar comentário (ROTA SIMPLES)
-router.post("/", async (req, res) => {
+router.post("/", async (req: Request, res: Response) => {
   try {
     console.log("🎯 COMMENT ROUTE: Requisição recebida!");
     console.log("📦 Body:", req.body);
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
 });
 
 // GET /api/comments - Listar comentários (opcional)
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const comments = await prisma.comment.findMany({
       include: {

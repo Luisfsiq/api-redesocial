@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../index';
 import { validate } from '../middleware/validate';
@@ -6,7 +6,7 @@ import { createUserSchema, updateUserSchema } from '../schemas/userSchema';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     const user = await prisma.user.findUnique({
@@ -53,7 +53,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', validate(createUserSchema), async (req, res) => {
+router.post('/', validate(createUserSchema), async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.create({
       data: req.body,
@@ -77,7 +77,7 @@ router.post('/', validate(createUserSchema), async (req, res) => {
   }
 });
 
-router.put('/:id', validate(updateUserSchema), async (req, res) => {
+router.put('/:id', validate(updateUserSchema), async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     const user = await prisma.user.update({
@@ -103,7 +103,7 @@ router.put('/:id', validate(updateUserSchema), async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     await prisma.user.delete({

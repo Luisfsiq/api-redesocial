@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { validate } from "../middleware/validate";
 import { createPostSchema, updatePostSchema } from "../schemas/postSchema";
@@ -7,7 +7,7 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 // GET /api/posts - Buscar todos os posts
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     console.log("🔄 Buscando posts...");
     const posts = await prisma.post.findMany({
@@ -47,7 +47,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /api/posts/:id - Buscar post por ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     const post = await prisma.post.findUnique({
@@ -89,7 +89,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /api/posts - Criar novo post
-router.post("/", validate(createPostSchema), async (req, res) => {
+router.post("/", validate(createPostSchema), async (req: Request, res: Response) => {
   try {
     console.log("📝 Criando post:", req.body);
     const post = await prisma.post.create({
@@ -115,7 +115,7 @@ router.post("/", validate(createPostSchema), async (req, res) => {
 });
 
 // PUT /api/posts/:id - Atualizar post
-router.put("/:id", validate(updatePostSchema), async (req, res) => {
+router.put("/:id", validate(updatePostSchema), async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     const post = await prisma.post.update({
@@ -144,7 +144,7 @@ router.put("/:id", validate(updatePostSchema), async (req, res) => {
 });
 
 // DELETE /api/posts/:id - Deletar post
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     await prisma.post.delete({
@@ -161,11 +161,10 @@ router.delete("/:id", async (req, res) => {
 });
 
 // PATCH /api/posts/:id/like - Curtir/descurtir post (CORRIGIDA)
-router.patch("/:id/like", async (req, res) => {
+router.patch("/:id/like", async (req: Request, res: Response) => {
   const id = req.params.id;
   const { userId } = req.body;
 
-  // VALIDAÇÃO ADICIONADA
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });
   }
